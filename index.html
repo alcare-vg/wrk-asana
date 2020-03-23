@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="img/favicon.ico">
-    <title>院内売店地図Map</title>
+    <title>AlcareVG Asanaビューワー</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
@@ -23,7 +23,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">院内売店地図Map</a>
+              <a class="navbar-brand" href="#">AlcareVG Asanaビューワー</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
@@ -55,140 +55,9 @@
           </div>
         </div>
 
-    <script src="constants.js"></script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyC3W3HUvMUnjTuwkbSi2tBd8uvnGLpg8V0&callback=initMap" async defer></script>
+    <script src="js/constants.js"></script>
 
     <script>
-
-      var target = document.getElementById('map');
-      var map;
-      var marker = [];
-      var infoWindow = [];
-      var windowOpened;
-
-      function geoFindMe() {
-
-        if (!navigator.geolocation){
-          return;
-        }
-
-        function success(position) {
-          var gdata = new Object();
-          gdata.lat = position.coords.latitude;
-          gdata.lng = position.coords.longitude;
-
-          var centerp = {lat: gdata.lat, lng: gdata.lng};
-
-          map = new google.maps.Map(target, {
-            center: centerp,
-            zoom: 18,
-          });
-
-          var marker = new google.maps.Marker({
-            map : map,             // 対象の地図オブジェクト
-            position : centerp,   // 緯度・経度
-            icon: {
-          		fillColor: "#009a63",                //塗り潰し色
-          		fillOpacity: 0.8,                    //塗り潰し透過率
-          		path: google.maps.SymbolPath.CIRCLE, //円を指定
-          		scale: 16,                           //円のサイズ
-          		strokeColor: "#009a63",              //枠の色
-          		strokeWeight: 1.0                    //枠の透過率
-          	},
-          	label: {
-          		text: '現在地',                           //ラベル文字
-          		color: '#FFFFFF',                    //文字の色
-          		fontSize: '10px'                     //文字のサイズ
-          	}
-          });
-
-          $.getJSON("json/mapdata.json", function() {
-              console.log("実行");
-          })
-          .done(function(json) {
-              console.log("成功");
-              setData(json);
-          })
-          .fail(function(jqXHR, textStatus, errorThrown) {
-              console.log("エラー：" + textStatus);
-              console.log("テキスト：" + jqXHR.responseText);
-          })
-          .always(function() {
-              console.log("完了");
-          });
-
-        }
-        function error() {
-        }
-        navigator.geolocation.getCurrentPosition(success, error);
-      }
-
-
-      function parseData(data) {
-        var keys = data.values[0];
-        var markerData = [];
-        data.values.forEach(function(value, i) {
-          if (i > 0) {
-            var hash = {};
-            value.forEach(function(d, j) {
-              hash[keys[j]] = d;
-            });
-            markerData.push(hash);
-          }
-        });
-        return markerData;
-      }
-
-      function initMap() {
-        geoFindMe();
-      }
-
-      function addMarker(i, data) {
-        var markerLatLng = new google.maps.LatLng({
-          lat: Number(data['緯度']),
-          lng: Number(data['経度'])
-        });
-        marker[i] = new google.maps.Marker({
-          position: markerLatLng,
-          map: map
-        });
-
-        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['名称'] + '<br>TEL：'+data['電話番号']+'</div>';
-        infoWindow[i] = new google.maps.InfoWindow({
-          content: info
-        });
-
-        markerEvent(i);
-      }
-
-      function setData(markerData){
-        var sidebar_html = "";
-        for (var i = 0; i < markerData.length; i++) {
-          var latitude = markerData[i]['緯度'];
-          if (!latitude) { continue; }
-          addMarker(i, markerData[i]);
-          var name = markerData[i]['名称'];
-
-          sidebar_html += `<a href="javascript:openWindow(${i})" class="list-group-item">${name}<\/a><br />`;
-        }
-
-        document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">Googleスプレッドシート</a><br /><br />` + sidebar_html;
-      }
-
-      function markerEvent(i) {
-        marker[i].addListener('click', function() {
-          openWindow(i);
-        });
-      }
-
-      function openWindow(i) {
-        if(windowOpened){
-          windowOpened.close();
-        }
-        infoWindow[i].open(map, marker[i]);
-        windowOpened = infoWindow[i];
-      }
 
       function mapResize(){
         var wH = $(window).height();// 表示画面の高さを取得
