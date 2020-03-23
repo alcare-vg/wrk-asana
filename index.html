@@ -10,71 +10,96 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/asana.js"></script>
   </head>
 
-  <body>
+  <body onload="myOpen();">
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">AlcareVG Asanaビューワー</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
-              </ul>
-              <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-              </form>
-            </div>
-          </div>
-        </nav>
-
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-3 col-lg-2 sidebar">
-              <ul class="nav nav-sidebar">
-                <div id="sidebar"></div>
-              </ul>
-            </div>
-            <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
-              <div id="map"></div>
-            </div>
-            <div class="myfooter">
-              <p class="text-muted" style="text-align: right">&copy;ALCARE Co., Ltd.</p>
-            </div>
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">AlcareVG Asanaビューワー</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Help</a></li>
+            </ul>
           </div>
         </div>
+      </nav>
 
-    <script src="js/constants.js"></script>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <div id="mySidebar">
+            <ul class="nav nav-sidebar">
+              <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">Reports</a></li>
+              <li><a href="#">Analytics</a></li>
+              <li><a href="#">Export</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-    <script>
+          <div class="panel panel-default">
 
-      function mapResize(){
-        var wH = $(window).height();// 表示画面の高さを取得
-        $('#map').css('height', wH-120 + 'px');// 算出した差分をヘッダーエリアの高さに指定
-        $('#sidebar').css('height', wH-120-35 + 'px');// 算出した差分をヘッダーエリアの高さに指定
+            <div class="panel-heading">
+              <h3 class="panel-title">Asana 取得情報</h3>
+            </div>
+            <div class="panel-body">
+              <div id="myMain"></div>
+            </div>
+          </div>
+
+          <nav aria-label="...">
+            <ul class="pager">
+              <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+              <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      function myOpen() {
+        var asana = require('asana');
+
+        // replace with your personal access token.
+        var personalAccessToken = TOKEN;
+
+        // construct an Asana client
+        var client = asana.Client.create().useAccessToken(personalAccessToken);
+
+        // Get your user info
+        client.users.me()
+          .then(function(me) {
+            // Print out your information
+            setData('Hello world! ' + 'My name is ' + me.name + '.');
+        });
+
       }
 
+      function setData() {
+        var elem = document.getElementById("myMain").innerText = data;
+      }
+
+
+
     </script>
 
-    <script>
-      $(function(){
-        mapResize();
-      });
-      $(window).resize(function(){
-        mapResize();
-      });
-    </script>
+    <script src="js/constants.js"></script>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
